@@ -8,4 +8,6 @@ import dagger.Component;
 @Component(modules = DamApplicationModule.class)
 public interface TestDamApplicationComponent extends DamApplicationComponent {
     void inject(MainActivityTest mainActivityTest);
+
+
 }

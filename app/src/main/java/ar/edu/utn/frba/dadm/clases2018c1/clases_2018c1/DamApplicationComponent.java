@@ -7,6 +7,9 @@ import dagger.Component;
 @Component(modules = DamApplicationModule.class)
 @Singleton
 public interface DamApplicationComponent {
+
+    VideoService getVideoService();
+
     void inject (DamApplication damApplication);
 
 }

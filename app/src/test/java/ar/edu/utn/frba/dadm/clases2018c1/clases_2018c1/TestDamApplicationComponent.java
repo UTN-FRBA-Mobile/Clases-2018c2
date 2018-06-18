@@ -8,5 +8,5 @@ import dagger.Component;
 @Singleton
 @Component(modules = DamApplicationModule.class)
 public interface TestDamApplicationComponent extends DamApplicationComponent {
-    void inject(MainActivityPresenterTest mainActivityPresenterTest);
+    void inject(MainPresenterTest mainActivityPresenterTest);
 }

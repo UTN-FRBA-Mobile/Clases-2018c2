@@ -6,17 +6,17 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module
-public class MainActivityModule {
+public class MainModule {
     private MainActivity mainActivity;
 
-    MainActivityModule(MainActivity mainActivity) {
+    MainModule(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
     }
 
     @Provides
     @ActivityScoped
-    MainActivityContract.Presenter provideMainActivityPresenter() {
-        return new MainActivityPresenter(mainActivity);
+    MainContract.Presenter provideMainActivityPresenter(@NonNull VideoService videoService) {
+        return new MainPresenter(mainActivity, videoService);
 
     }
 }
