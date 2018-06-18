@@ -14,6 +14,8 @@ public class BaseUnitTest {
                 .damApplicationModule(new TestDamApplicationModule())
                 .build();
 
+        DamApplication.setComponent(component);
+
         MockitoAnnotations.initMocks(this);
     }
 

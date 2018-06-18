@@ -41,6 +41,10 @@ public class DamApplication extends Application{
         return component;
     }
 
+    public static void setComponent(DamApplicationComponent component) {
+        DamApplication.component = component;
+    }
+
     public static Api getApi() {
         return api;
     }

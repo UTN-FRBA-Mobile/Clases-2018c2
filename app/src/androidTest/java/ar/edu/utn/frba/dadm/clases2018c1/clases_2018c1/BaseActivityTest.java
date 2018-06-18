@@ -2,10 +2,14 @@ package ar.edu.utn.frba.dadm.clases2018c1.clases_2018c1;
 
 import android.app.Activity;
 import android.app.Instrumentation;
+import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
+
+import com.squareup.picasso.Picasso;
 
 import org.junit.After;
 import org.junit.Before;
@@ -13,6 +17,11 @@ import org.junit.Rule;
 import org.junit.runner.RunWith;
 
 import java.lang.reflect.ParameterizedType;
+
+import javax.inject.Singleton;
+
+import dagger.Provides;
+import okhttp3.OkHttpClient;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -49,6 +58,8 @@ public abstract class BaseActivityTest<T extends Activity> {
                 .damApplicationModule(new TestDamApplicationModule())
                 .build();
 
+        DamApplication.setComponent(component);
+
     }
 
     /**
@@ -62,5 +73,4 @@ public abstract class BaseActivityTest<T extends Activity> {
     public void launchActivity(Intent intent) {
         activity = activityTestRule.launchActivity(intent);
     }
-
 }

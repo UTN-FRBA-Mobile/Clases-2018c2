@@ -23,7 +23,7 @@ import butterknife.OnClick;
 public class MainActivity extends AppCompatActivity implements MainContract.View {
 
     @Inject MainContract.Presenter presenter;
-    private ProgressDialog progressDialog;
+    @Inject Picasso picasso;
 
     @BindView(R.id.text_view) TextView textView;
     @BindView(R.id.text_view_title) TextView textViewTitle;
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     public void showVideo(String name, String description, String preview) {
         textViewTitle.setText(name);
         textViewDescription.setText(description);
-        Picasso.get().load(preview).into(imageView);
+//        picasso.load(preview).into(imageView);
     }
 
     @Override

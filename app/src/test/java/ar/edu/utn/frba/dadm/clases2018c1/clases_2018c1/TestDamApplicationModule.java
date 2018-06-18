@@ -4,7 +4,6 @@ import org.mockito.Mockito;
 
 public class TestDamApplicationModule extends DamApplicationModule{
 
-
     @Override
     public VideoService provideVideoService() {
         return Mockito.mock(VideoService.class);
