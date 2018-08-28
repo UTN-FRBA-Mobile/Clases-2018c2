@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Clases-2018c2</string>
+    <string name="hi">Hola %1$s</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
 </resources>
