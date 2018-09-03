@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".StatusUpdateFragment">
+
+    <ImageView
+        android:id="@+id/picture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:src="@drawable/mirtha"/>
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:text="Mirtha Legrand"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/privacyButton"
+        style="@style/settingButton"
+        android:drawableEnd="@drawable/ic_arrow_drop_down_black_18dp"
+        android:drawableStart="@drawable/ic_group_black_18dp"
+        android:text="@string/friends"/>
+
+    <TextView
+        style="@style/settingButton"
+        android:drawableEnd="@drawable/ic_arrow_drop_down_black_18dp"
+        android:drawableStart="@drawable/ic_add_black_18dp"
+        android:text="@string/album"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="top"
+        android:hint="@string/whatAreYouThinking"
+        android:inputType="textAutoCorrect"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/colorsRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:paddingEnd="40dp"
+        android:paddingStart="40dp"/>
+
+    <ImageView
+        style="@style/colorButton"
+        android:layout_gravity="start|center_vertical"
+        android:src="@drawable/ic_chevron_left_black_24dp"/>
+
+    <ImageView
+        style="@style/colorButton"
+        android:layout_gravity="end|center_vertical"
+        android:src="@drawable/ic_grid_on_black_24dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:text="@string/addToYourPost"/>
+
+    <ImageView
+        style="@style/addToPostButton"
+        android:src="@drawable/ic_photo_library_black_24dp"
+        android:tint="#40c040"/>
+
+    <ImageView
+        style="@style/addToPostButton"
+        android:src="@drawable/ic_person_add_black_24dp"
+        android:tint="#4080ff"/>
+
+    <ImageView
+        style="@style/addToPostButton"
+        android:src="@drawable/ic_sentiment_very_satisfied_black_24dp"
+        android:tint="#ffc000"/>
+
+    <ImageView
+        style="@style/addToPostButton"
+        android:src="@drawable/ic_location_on_black_24dp"
+        android:tint="#ff2020"/>
+</LinearLayout>
