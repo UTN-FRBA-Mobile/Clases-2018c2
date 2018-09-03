@@ -12,25 +12,34 @@ import ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2.R
 class MyAdapter(private val myDataset: MutableList<Movie>) :
         RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
 
+    private val VIEWTYPE_CATEGORY: Int = 1
+    private val VIEWTYPE_MOVIE: Int = 2
+
     class MyViewHolder(val view: View) : RecyclerView.ViewHolder(view)
 
     override fun onCreateViewHolder(parent: ViewGroup,
                                     viewType: Int): MyAdapter.MyViewHolder {
-        val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.movie_listitem_view, parent, false)
+        val view : View = if(viewType == VIEWTYPE_CATEGORY)
+            LayoutInflater.from(parent.context)
+                    .inflate(R.layout.view_listitem_category, parent, false)
+        else
+            LayoutInflater.from(parent.context)
+                    .inflate(R.layout.view_listitem_movie, parent, false)
 
         return MyViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.view.findViewById<TextView>(R.id.movie_name).text = myDataset[position].movieName
+        if(myDataset[position].moviePoster != null)
+            holder.view.findViewById<ImageView>(R.id.movie_poster).setImageResource(myDataset[position].moviePoster!!)
+    }
 
-        if (position % 2 == 0)
-            //even
-            holder.view.findViewById<ImageView>(R.id.movie_cover).setImageResource(R.drawable.movie_icon_1)
+    override fun getItemViewType(position: Int): Int {
+        return if(myDataset[position].IsCategory)
+            VIEWTYPE_CATEGORY
         else
-            //odd
-            holder.view.findViewById<ImageView>(R.id.movie_cover).setImageResource(R.drawable.movie_icon_2)
+            VIEWTYPE_MOVIE
     }
 
     override fun getItemCount() = myDataset.size

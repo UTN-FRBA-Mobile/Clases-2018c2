@@ -1,10 +1,10 @@
 package ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2.Dashboard
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2.Movie
+import ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2.MoviesApi
 import ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2.R
 
 class DashboardActivity : AppCompatActivity() {
@@ -14,12 +14,7 @@ class DashboardActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard)
 
-
-        val myDataset = mutableListOf<Movie>()
-
-        for (i in 1..30) {
-            myDataset.add(Movie("Movie $i"))
-        }
+        val myDataset = MoviesApi().getMovies()
 
         val viewManager = LinearLayoutManager(this)
         val viewAdapter = MyAdapter(myDataset)

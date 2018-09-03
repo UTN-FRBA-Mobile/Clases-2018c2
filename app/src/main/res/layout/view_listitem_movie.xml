@@ -7,7 +7,7 @@
     android:padding="10dp">
 
     <ImageView
-        android:id="@+id/movie_cover"
+        android:id="@+id/movie_poster"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
