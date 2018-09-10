@@ -9,6 +9,10 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 
 /**
  * A fragment representing a list of Items.
@@ -22,6 +26,11 @@ class TweetsFragment : Fragment() {
 
     private var listener: OnListFragmentInteractionListener? = null
 
+    val api by lazy {
+        Api.create()
+    }
+    var disposable: Disposable? = null
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_tweet_list, container, false)
@@ -32,10 +41,30 @@ class TweetsFragment : Fragment() {
         // Set the adapter
         if (view is RecyclerView) {
             with(view) {
+                var tweetsAdapter = TweetsAdapter(listener)
                 layoutManager = LinearLayoutManager(context)
-                adapter = TweetsAdapter(listener)
+                adapter = tweetsAdapter
+
+                disposable =
+                        api.getTweets()
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(
+                                        { result ->
+                                            tweetsAdapter.items = result.tweets
+                                            tweetsAdapter.notifyDataSetChanged()
+                                        },
+                                        {
+                                            error ->
+                                            Toast.makeText(activity, "No tweets founds!", Toast.LENGTH_SHORT).show() }
+                                )
             }
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        disposable?.dispose()
     }
 
     override fun onAttach(context: Context) {

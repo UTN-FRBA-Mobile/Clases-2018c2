@@ -9,6 +9,7 @@ import android.widget.TextView
 
 
 import ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2.TweetsFragment.OnListFragmentInteractionListener
+import com.squareup.picasso.Picasso
 
 import kotlinx.android.synthetic.main.item_footer.view.*
 import kotlinx.android.synthetic.main.item_header.view.*
@@ -19,8 +20,10 @@ class TweetsAdapter(
         private val mListener: OnListFragmentInteractionListener?)
     : RecyclerView.Adapter<TweetsAdapter.ViewHolder>() {
 
+    var items : List<Tweet> = ArrayList()
+
     override fun getItemViewType(position: Int): Int {
-        return if (position % 2 == 0) R.layout.item_simple else R.layout.item_image
+        return R.layout.item_simple
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -31,16 +34,18 @@ class TweetsAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         // dummy
+        var item = items[position]
         holder.nameText.text = "User ${position}"
         holder.certifiedIcon.visibility = if (position % 3 == 0) View.VISIBLE else View.GONE
         holder.usernameText.text = "@username${position}"
-        holder.tweetContent.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua."
+        holder.tweetContent.text = item.content
         holder.commentCount.text = "${position}"
         holder.retweetCount.text = "${position * 2}"
         holder.likeCount.text = "${position * 3}"
+        Picasso.get().load(item.profilePic).into(holder.profilePic)
     }
 
-    override fun getItemCount(): Int = 100
+    override fun getItemCount(): Int = items.size
 
     inner class ViewHolder(mView: View) : RecyclerView.ViewHolder(mView) {
         val profilePic: ImageView = mView.profilePic
