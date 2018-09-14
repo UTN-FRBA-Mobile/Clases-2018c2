@@ -11,11 +11,18 @@
         android:orientation="vertical"
         android:gravity="top|center_horizontal">
 
-        <EditText android:id="@+id/titleInput"
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:inputType="text" />
+            android:hint="Buscar por título...">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/titleInput"
+                android:layout_width="match_parent"
+                android:layout_margin="8dp"
+                android:inputType="text"
+                android:layout_height="wrap_content" />
+        </android.support.design.widget.TextInputLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -29,16 +36,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
+                style="@style/Widget.AppCompat.Button.Colored"
                 android:text="@string/favMovies"/>
 
             <Button android:id="@+id/findButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
+                style="@style/Widget.AppCompat.Button.Colored"
                 android:text="@string/findMovie"/>
         </LinearLayout>
 
-        <android.support.v7.widget.AppCompatImageButton
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
@@ -46,7 +55,7 @@
             android:src="@drawable/ic_list_view"
             android:id="@+id/listView"/>
 
-        <android.support.v7.widget.AppCompatImageButton
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"

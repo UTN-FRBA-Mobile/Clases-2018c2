@@ -52,10 +52,6 @@ class MainActivity : AppCompatActivity(), SearchedMoviesAdapter.IListener {
     }
 
     private fun SetUpUIElements() {
-        recyclerView.layoutManager = if (searchLayoutType == MovieAdapter.Layout_grid) GridLayoutManager(this@MainActivity, 3) else LinearLayoutManager(this@MainActivity)
-
-        searchRecyclerView.layoutManager = LinearLayoutManager(this)
-
         titleInput.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {}
 
@@ -131,6 +127,7 @@ class MainActivity : AppCompatActivity(), SearchedMoviesAdapter.IListener {
 
                 setLoading(false)
 
+                recyclerView.layoutManager = if (searchLayoutType == MovieAdapter.Layout_grid) GridLayoutManager(this@MainActivity, 3) else LinearLayoutManager(this@MainActivity)
                 adapter = MovieAdapter(this@MainActivity, movies, searchLayoutType, false)
                 recyclerView.adapter = adapter
             }
@@ -174,6 +171,7 @@ class MainActivity : AppCompatActivity(), SearchedMoviesAdapter.IListener {
                     return
                 }
 
+                searchRecyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
                 searchedMoviesAdapter = SearchedMoviesAdapter(this@MainActivity, searchedMovies)
                 searchRecyclerView.adapter = searchedMoviesAdapter
                 searchRecyclerView.visibility = View.VISIBLE
