@@ -8,25 +8,34 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2.storage.db.AppDatabase
+import ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2.storage.db.entities.FavoriteMovie
 import ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2.storage.fileSystem.ExternalStorage
 import com.squareup.picasso.Picasso
 import java.lang.Exception
 
-class MovieViewHolder(itemView: View, context: Context, private val storePostersInFs: Boolean) : RecyclerView.ViewHolder(itemView) {
+class MovieViewHolder(itemView: View, val context: Context, private val storePostersInFs: Boolean) : RecyclerView.ViewHolder(itemView) {
     private val poster: ImageView = itemView.findViewById(R.id.moviePoster)
     val title: TextView? = itemView.findViewById(R.id.movieTitle)
     private val year: TextView? = itemView.findViewById(R.id.movieYear)
     val setStarred: ImageView? = itemView.findViewById(R.id.set_starred)
     val unsetStarred: ImageView? = itemView.findViewById(R.id.unset_starred)
+    val favoriteMoviesDao = AppDatabase.getInstance(context).favoriteMoviesDao()
 
     fun bind(movie: ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2.api.responses.Movie) {
-        class BindAsync : AsyncTask<Void, Void, Unit>() {
-            override fun doInBackground(vararg params: Void) {
+        class BindAsync : AsyncTask<Void, Void, FavoriteMovie?>() {
+            override fun doInBackground(vararg params: Void): FavoriteMovie? {
+                return favoriteMoviesDao.getByTitle(movie.title!!)
             }
 
-            override fun onPostExecute(response: Unit) {
-                setStarred?.visibility = View.VISIBLE
-                unsetStarred?.visibility = View.GONE
+            override fun onPostExecute(response: FavoriteMovie?) {
+                if(response == null){
+                    setStarred?.visibility = View.VISIBLE
+                    unsetStarred?.visibility = View.GONE
+                } else {
+                    setStarred?.visibility = View.GONE
+                    unsetStarred?.visibility = View.VISIBLE
+                }
 
                 setUpSetStarred(movie)
 
@@ -57,6 +66,11 @@ class MovieViewHolder(itemView: View, context: Context, private val storePosters
     private fun setUpSetStarred(movie: ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2.api.responses.Movie) {
         class SetUpSetStarredAsync : AsyncTask<Void, Void, Unit>() {
             override fun doInBackground(vararg params: Void) {
+                favoriteMoviesDao.insert(FavoriteMovie().apply {
+                    this.poster = movie.poster
+                    this.year = movie.year
+                    this.title = movie.title!!
+                })
             }
 
             override fun onPostExecute(response: Unit) {
@@ -73,6 +87,12 @@ class MovieViewHolder(itemView: View, context: Context, private val storePosters
     private fun setUpUnsetStarred(movie: ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2.api.responses.Movie) {
         class SetUpUnsetStarredAsync : AsyncTask<Void, Void, Unit>() {
             override fun doInBackground(vararg params: Void) {
+                favoriteMoviesDao.delete(FavoriteMovie().apply {
+                    this.poster = movie.poster
+                    this.year = movie.year
+                    this.title = movie.title!!
+                })
+
                 ExternalStorage.deleteFile(movie.title!!)
                 //ExternalStorage.deleteFileFromCache(context, fileName)
                 //InternalStorage.deleteFile(context, fileName)

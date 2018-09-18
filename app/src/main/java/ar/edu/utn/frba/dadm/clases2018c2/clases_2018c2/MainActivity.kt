@@ -11,8 +11,10 @@ import android.view.View
 import android.widget.GridLayout
 import android.widget.Toast
 import ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2.api.Api
+import ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2.api.responses.Movie
 import ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2.api.responses.MovieSearch
 import ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2.storage.db.AppDatabase
+import ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2.storage.db.daos.FavoriteMoviesDao
 import ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2.storage.db.daos.SearchesDao
 import ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2.storage.db.entities.Search
 import ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2.storage.preferences.MyPreferences
@@ -33,10 +35,9 @@ class MainActivity : AppCompatActivity(), SearchedMoviesAdapter.IListener {
     private lateinit var searchedMoviesAdapter: SearchedMoviesAdapter
 
     private lateinit var movieSearchDao: SearchesDao
+    private lateinit var favoriteMoviesDao: FavoriteMoviesDao
 
     private lateinit var api: Api
-
-    private var searchLayoutType: Int = MovieAdapter.Layout_list
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +46,7 @@ class MainActivity : AppCompatActivity(), SearchedMoviesAdapter.IListener {
         api = createNetworkClient(Api::class.java, "http://www.omdbapi.com")
 
         movieSearchDao = AppDatabase.getInstance(this@MainActivity).movieSearchDao()
+        favoriteMoviesDao = AppDatabase.getInstance(this@MainActivity).favoriteMoviesDao()
 
         SetUpUIElements()
 
@@ -73,18 +75,27 @@ class MainActivity : AppCompatActivity(), SearchedMoviesAdapter.IListener {
 
         favButton.setOnClickListener { favMovie() }
 
+        val preferredSearchLayoutType = MyPreferences.getPreferredSearchView(this@MainActivity)
+        if(preferredSearchLayoutType == MovieAdapter.Layout_list){
+            listView.visibility = View.GONE
+            gridView.visibility = View.VISIBLE
+        } else {
+            listView.visibility = View.VISIBLE
+            gridView.visibility = View.GONE
+        }
+
         listView.setOnClickListener {
             recyclerView.layoutManager = LinearLayoutManager(this)
+            MyPreferences.setPreferredSearchView(this, MovieAdapter.Layout_list)
             (recyclerView.adapter as MovieAdapter).layoutType = MovieAdapter.Layout_list
-            searchLayoutType = MovieAdapter.Layout_list
             listView.visibility = View.GONE
             gridView.visibility = View.VISIBLE
         }
 
         gridView.setOnClickListener {
             recyclerView.layoutManager = GridLayoutManager(this, 3)
+            MyPreferences.setPreferredSearchView(this, MovieAdapter.Layout_grid)
             (recyclerView.adapter as MovieAdapter).layoutType = MovieAdapter.Layout_grid
-            searchLayoutType = MovieAdapter.Layout_grid
             gridView.visibility = View.GONE
             listView.visibility = View.VISIBLE
         }
@@ -127,8 +138,9 @@ class MainActivity : AppCompatActivity(), SearchedMoviesAdapter.IListener {
 
                 setLoading(false)
 
-                recyclerView.layoutManager = if (searchLayoutType == MovieAdapter.Layout_grid) GridLayoutManager(this@MainActivity, 3) else LinearLayoutManager(this@MainActivity)
-                adapter = MovieAdapter(this@MainActivity, movies, searchLayoutType, false)
+                val preferredSearchLayoutType = MyPreferences.getPreferredSearchView(this@MainActivity)
+                recyclerView.layoutManager = if (preferredSearchLayoutType == MovieAdapter.Layout_grid) GridLayoutManager(this@MainActivity, 3) else LinearLayoutManager(this@MainActivity)
+                adapter = MovieAdapter(this@MainActivity, movies, preferredSearchLayoutType, false)
                 recyclerView.adapter = adapter
             }
 
@@ -140,16 +152,19 @@ class MainActivity : AppCompatActivity(), SearchedMoviesAdapter.IListener {
 
     private fun favMovie() {
         setLoading(true)
-        class SetFavoriteMovieAsync : AsyncTask<Void, Void, Unit>() {
-            override fun doInBackground(vararg params: Void) {
+        class SetFavoriteMovieAsync : AsyncTask<Void, Void, List<ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2.api.responses.Movie>>() {
+            override fun doInBackground(vararg params: Void): List<ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2.api.responses.Movie> {
+                return favoriteMoviesDao.getAll().map { fm -> Movie().apply {
+                    title = fm.title
+                    poster = fm.poster
+                    year = fm.year
+                } }
             }
 
-            override fun onPostExecute(response: Unit) {
-                val starredMovies = ArrayList<ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2.api.responses.Movie>()
-
-
-                recyclerView.layoutManager = if(searchLayoutType == MovieAdapter.Layout_grid) LinearLayoutManager(this@MainActivity) else GridLayoutManager(this@MainActivity, 3)
-                adapter = MovieAdapter(this@MainActivity, starredMovies, searchLayoutType, true)
+            override fun onPostExecute(starredMovies: List<ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2.api.responses.Movie>) {
+                val preferredSearchLayoutType = MyPreferences.getPreferredSearchView(this@MainActivity)
+                recyclerView.layoutManager = if(preferredSearchLayoutType == MovieAdapter.Layout_grid) GridLayoutManager(this@MainActivity, 3) else LinearLayoutManager(this@MainActivity)
+                adapter = MovieAdapter(this@MainActivity, starredMovies, preferredSearchLayoutType, true)
                 recyclerView.adapter = adapter
 
                 setLoading(false)
