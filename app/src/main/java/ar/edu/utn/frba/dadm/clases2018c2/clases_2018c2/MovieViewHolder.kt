@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
@@ -8,6 +9,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2.Permissions.Permissions
 import ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2.storage.db.AppDatabase
 import ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2.storage.db.entities.FavoriteMovie
 import ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2.storage.fileSystem.ExternalStorage
@@ -116,8 +118,9 @@ class MovieViewHolder(itemView: View, val context: Context, private val storePos
             }
 
             override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom) {
+                //TODO Acá verificar que haya permisos antes de guardar en almacenamiento externo
                 ExternalStorage.saveFile(bitmap, fileName)
-                //ExternalStorage.saveFileInCache(context, bitmap, fileName)
+                //ExternalStorage.saveFileInCache(activity, bitmap, fileName)
                 //InternalStorage.saveFile(context, bitmap, fileName)
                 //InternalStorage.saveFileInCache(context, bitmap, fileName)
 

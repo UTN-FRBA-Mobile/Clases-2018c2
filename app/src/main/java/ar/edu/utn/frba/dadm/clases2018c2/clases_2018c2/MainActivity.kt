@@ -10,6 +10,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.GridLayout
 import android.widget.Toast
+import ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2.Permissions.Permissions
 import ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2.api.Api
 import ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2.api.responses.Movie
 import ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2.api.responses.MovieSearch
@@ -52,6 +53,8 @@ class MainActivity : AppCompatActivity(), SearchedMoviesAdapter.IListener {
 
         Toast.makeText(this, "Hola " + MyPreferences.getUsername(this), Toast.LENGTH_LONG).show()
     }
+
+    //TODO Acá meter el override de onRequestPermissionsResult
 
     private fun SetUpUIElements() {
         titleInput.addTextChangedListener(object : TextWatcher {
@@ -151,6 +154,13 @@ class MainActivity : AppCompatActivity(), SearchedMoviesAdapter.IListener {
     }
 
     private fun favMovie() {
+        //TODO Acá verificar si existen permisos para guardar en almacenamiento externo, y si no, pedirlos.
+        // Utilizar checkForPermissions de Permissions.
+        // El string de la razón por la que se necesita el permiso está en "R.string.external_storage_permission_reason2
+        loadFavorites()
+    }
+
+    private fun loadFavorites() {
         setLoading(true)
         class SetFavoriteMovieAsync : AsyncTask<Void, Void, List<ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2.api.responses.Movie>>() {
             override fun doInBackground(vararg params: Void): List<ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2.api.responses.Movie> {
