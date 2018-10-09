@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2.Permissions
+package ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2.permissions
 
 import android.app.Activity
 import android.content.pm.PackageManager

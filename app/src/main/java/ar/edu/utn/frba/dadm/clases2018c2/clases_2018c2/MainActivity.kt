@@ -8,12 +8,11 @@ import android.support.v7.widget.LinearLayoutManager
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.widget.GridLayout
 import android.widget.Toast
-import ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2.Permissions.Permissions
 import ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2.api.Api
 import ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2.api.responses.Movie
 import ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2.api.responses.MovieSearch
+import ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2.permissions.Permissions
 import ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2.storage.db.AppDatabase
 import ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2.storage.db.daos.FavoriteMoviesDao
 import ar.edu.utn.frba.dadm.clases2018c2.clases_2018c2.storage.db.daos.SearchesDao
@@ -54,7 +53,19 @@ class MainActivity : AppCompatActivity(), SearchedMoviesAdapter.IListener {
         Toast.makeText(this, "Hola " + MyPreferences.getUsername(this), Toast.LENGTH_LONG).show()
     }
 
-    //TODO Acá meter el override de onRequestPermissionsResult
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        when (requestCode) {
+            Permissions.REQUEST_WRITE_EXTERNAL_STORAGE -> {
+                //No necesitamos los permisos de forma obligatoria en este caso, entonces la validación de si el permiso nos fue otorgado, o no, no hace falta ya que de todas formas vamos a ir a cargar los favoritos.
+                //if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                loadFavorites()
+                //}
+                return
+            }
+        }
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
 
     private fun SetUpUIElements() {
         titleInput.addTextChangedListener(object : TextWatcher {
@@ -154,10 +165,12 @@ class MainActivity : AppCompatActivity(), SearchedMoviesAdapter.IListener {
     }
 
     private fun favMovie() {
-        //TODO Acá verificar si existen permisos para guardar en almacenamiento externo, y si no, pedirlos.
-        // Utilizar checkForPermissions de Permissions.
-        // El string de la razón por la que se necesita el permiso está en "R.string.external_storage_permission_reason2
-        loadFavorites()
+        //android.Manifest.permission tiene todos los codigos de permisos que podemos llegar a necesitar pedir
+        Permissions.checkForPermissions(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE, getString(R.string.external_storage_permission_reason), object : Permissions.Callback {
+            override fun onSuccess() {
+                loadFavorites()
+            }
+        })
     }
 
     private fun loadFavorites() {
