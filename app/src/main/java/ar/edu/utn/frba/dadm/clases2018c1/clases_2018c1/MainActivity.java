@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     public void showVideo(String name, String description, String preview) {
         textViewTitle.setText(name);
         textViewDescription.setText(description);
-//        picasso.load(preview).into(imageView);
+        picasso.load(preview).into(imageView);
     }
 
     @Override
